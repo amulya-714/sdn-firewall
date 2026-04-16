@@ -1,6 +1,6 @@
 # SDN-Based Firewall using Mininet + Ryu
 
-## Team (PES University)
+## Team
 - Amulya P (AM458)
 - Vikas R (AM477)
 - Anjali Arun (AM421)
