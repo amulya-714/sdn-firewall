@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+from mininet.net import Mininet
+from mininet.node import RemoteController, OVSSwitch
+from mininet.cli import CLI
+from mininet.log import setLogLevel
+from mininet.topo import Topo
+
+class FirewallTopo(Topo):
+    def build(self):
+        # Add one switch
+        s1 = self.addSwitch('s1')
+
+        # Add 3 trusted hosts
+        h1 = self.addHost('h1', ip='10.0.0.1/24')
+        h2 = self.addHost('h2', ip='10.0.0.2/24')
+        h3 = self.addHost('h3', ip='10.0.0.3/24')
+
+        # Add 1 blocked/attacker host
+        h4 = self.addHost('h4', ip='10.0.0.4/24')
+
+        # Connect all hosts to the switch
+        self.addLink(h1, s1)
+        self.addLink(h2, s1)
+        self.addLink(h3, s1)
+        self.addLink(h4, s1)
+
+def run():
+    topo = FirewallTopo()
+    net = Mininet(
+        topo=topo,
+        controller=RemoteController('c0', ip='127.0.0.1', port=6633),
+        switch=OVSSwitch
+    )
+    net.start()
+    print("*** Network started")
+    print("*** h1=10.0.0.1  h2=10.0.0.2  h3=10.0.0.3")
+    print("*** h4=10.0.0.4 is BLOCKED by firewall")
+    CLI(net)
+    net.stop()
+
+if __name__ == '__main__':
+    setLogLevel('info')
+    run()
